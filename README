@@ -8,7 +8,7 @@ I thought it would be useful to knock it all together in one project and
 upload to a git repository.
 
 The code is almost entirely unchanged from the examples; only the query
-differs.  To create the table, do this: 
+differs.  To create the table, do this within a database called "javatest":
 
 CREATE TABLE `testdata` (
   `id` int(11) NOT NULL auto_increment,
@@ -42,4 +42,7 @@ to get two connections simultaneously.  However, the process ID
 of the unpooled connections will increase each time you refresh
 the page, as well as showing you all the additional crap that the
 database does when you connect to it.
-  
+
+You'll also need to set up a user account on your MySQL database,
+the credentials are stored in META-INF/context.xml - I'm sure you
+will be able to work it out.
