@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>JavaDbConnectionPooling</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	<description>MySQL Test App</description>
+	
+	<listener>
+        <listener-class> com.onjava.dbcp.DBCPoolingListener</listener-class>
+	</listener>
+
+<!-- This component has a dependency on an external resource-->
+ <resource-ref>
+      <description> DB Connection Pooling</description>
+      <res-ref-name> jdbc/TestDB</res-ref-name>
+      <res-type> javax.sql.DataSource</res-type>
+      <res-auth> Container</res-auth>
+  </resource-ref>
+
+<servlet>
+        <servlet-name> EnrolledStudents</servlet-name>
+        <servlet-class> com.onjava.dbcp.CourseEnrollmentServlet</servlet-class>
+        <load-on-startup> 1</load-on-startup>
+</servlet>
+<servlet>
+	<description>
+	</description>
+	<display-name>CourseEnrollmentServlet</display-name>
+	<servlet-name>CourseEnrollmentServlet</servlet-name>
+	<servlet-class>
+	CourseEnrollmentServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+        <servlet-name>EnrolledStudents</servlet-name>
+        <url-pattern>/enrollment.do</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>CourseEnrollmentServlet</servlet-name>
+	<url-pattern>/CourseEnrollmentServlet</url-pattern>
+</servlet-mapping>
+
+</web-app>

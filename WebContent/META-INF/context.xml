@@ -1,0 +1,12 @@
+<Context path="/dbcp" docBase="dbcp" debug="5"
+reloadable="true" crossContext="true">
+
+<Resource name="jdbc/TestDB" auth="Container"
+   type="javax.sql.DataSource" removeAbandoned="true"
+   removeAbandonedTimeout="30" maxActive="100"
+   maxIdle="30" maxWait="10000" username="javauser"
+   password="javadude"
+   driverClassName="com.mysql.jdbc.Driver"
+   url="jdbc:mysql://localhost/javatest"/>
+
+</Context>

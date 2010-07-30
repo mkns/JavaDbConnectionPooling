@@ -1,0 +1,45 @@
+This project shows java database connection pooling, with the bulk of the
+work taken from here:
+
+http://onjava.com/pub/a/onjava/2006/04/19/database-connection-pooling-with-tomcat.html
+
+However, that document is 4 years old and took a bit of working out, hence why
+I thought it would be useful to knock it all together in one project and
+upload to a git repository.
+
+The code is almost entirely unchanged from the examples; only the query
+differs.  To create the table, do this: 
+
+CREATE TABLE `testdata` (
+  `id` int(11) NOT NULL auto_increment,
+  `foo` varchar(255) default NULL,
+  `bar` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+Other than that, it should just work on a standard tomcat install as long as
+you have the mysql.jar file linked in within tomcat:
+
+mkns@lenny:~$ ls -l /usr/share/tomcat5.5/common/lib/mysql.jar
+lrwxrwxrwx 1 root root 25 2010-07-30 21:56 /usr/share/tomcat5.5/common/lib/mysql.jar -> /usr/share/java/mysql.jar
+
+Just check out the code, run ant to build and deploy the war file
+(or if the deploy fails because you don't have the manager set up
+exactly like I do, which is fair enough) then take the war file and
+just deploy it yourself.
+
+Once you have it deployed, go to either of these URLs:
+
+http://lenny:8180/JavaDbConnectionPooling/enrollment.do?pool=yes
+
+http://lenny:8180/JavaDbConnectionPooling/enrollment.do?pool=no
+
+You should then tail -f the mysql standard log file and refresh 
+either/both of those web pages and watch the process ID that
+connects.  As you might expect, the process ID of pooled
+connections will generally stay the same, unless you manage
+to get two connections simultaneously.  However, the process ID
+of the unpooled connections will increase each time you refresh
+the page, as well as showing you all the additional crap that the
+database does when you connect to it.
+  

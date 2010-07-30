@@ -1,0 +1,107 @@
+<project name="JavaDbConnectionPooling" default="all" basedir=".">
+	<description>JavaDbConnectionPooling</description>
+
+	<!-- Global properties -->
+	<property name="src" location="src" />
+	<property name="build" location="deb-build" />
+	<property name="build.compiler" value="modern" />
+	<property name="lib" location="lib" />
+	<property name="jars" location="jars" />
+	<property name="js" location="js" />
+	<property environment="env" />
+	<property name="javadoc" location="javadoc" />
+	<property name="manager.url" value="http://localhost:8180/manager" />
+	<property name="manager.user" value="manager" />
+	<property name="manager.passwd" value="manager" />
+	<property name="webappdir" location="/usr/share/tomcat5.5" />
+	<property name="tomcat5libs" location="${webappdir}/common/lib" />
+	<property name="tomcat5serverlibs" location="${webappdir}/server/lib" />
+	<property name="appname" value="JavaDbConnectionPooling" />
+
+	<property name="target" value="1.5" />
+	<property name="source" value="1.5" />
+
+	<path id="build.path">
+		<fileset dir="${tomcat5libs}">
+			<include name="*.jar" />
+		</fileset>
+		<path location="/usr/share/java/log4j-1.2.jar" />
+		<path location="/usr/share/java/mysql.jar" />
+	</path>
+
+	<target name="compile" description="Compile the source">
+		<mkdir dir="${build}" />
+		<javac srcdir="${src}" destdir="${build}" debug="yes" target="${target}" source="${source}">
+			<classpath refid="build.path" />
+		</javac>
+		<antcall target="build_template_jar" />
+	</target>
+
+	<target name="build_template_jar">
+		<jar destfile="build/templates.jar">
+			<fileset dir="templates">
+				<include name="**/*.html" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="build_web_archive" description="Builds the WAR file">
+		<war destfile="${appname}.war" webxml="WebContent/WEB-INF/web.xml">
+			<classes dir="${build}" />
+			<lib dir="${lib}" />
+			<fileset dir="WebContent" />
+			<lib dir="build">
+				<include name="templates.jar" />
+			</lib>
+			<zipfileset dir="img" prefix="img/">
+			</zipfileset>
+		</war>
+	</target>
+
+	<target name="install" depends="build_web_archive">
+		<copy file="${appname}.war" todir="${webappdir}/webapps" />
+	</target>
+
+	<!-- Don't include build_docs in this, as we won't usually want to do that! -->
+	<target name="build_app" depends="compile,build_web_archive" />
+
+	<target name="clean">
+		<delete file="${appname}.war" />
+		<delete file="build/templates.jar" />
+
+		<delete>
+			<fileset dir="${build}">
+				<include name="**/*.class" />
+			</fileset>
+		</delete>
+
+		<delete file="build-stamp" />
+
+		<exec executable="dh_clean" failifexecutionfails="false">
+			<arg value="-v" />
+		</exec>
+	</target>
+
+	<target name="undeploy">
+		<get src="${manager.url}/remove?path=/${appname}" dest="${build}/undeployOutput.txt" username="${manager.user}" password="${manager.passwd}" verbose="true" />
+
+		<concat>
+			<filelist dir="${build}" files="undeployOutput.txt" />
+		</concat>
+	</target>
+
+
+	<target name="deploy">
+		<get src="${manager.url}/install?path=/${appname}&amp;war=jar:file:${webappdir}/webapps/${appname}.war!/" dest="${build}/deployOutput.txt" username="${manager.user}" password="${manager.passwd}" verbose="true" />
+		<concat>
+			<filelist dir="${build}" files="deployOutput.txt" />
+		</concat>
+	</target>
+
+	<target name="redeploy" depends="undeploy,deploy" />
+
+	<target name="debuild" depends="build_app" />
+
+	<target name="all" depends="build_app,undeploy,install,deploy" />
+
+</project>
