@@ -67,9 +67,10 @@ public class CourseEnrollmentServlet extends HttpServlet {
 		ResultSet rs = null;
 
 		try {
-			connection = getConnection(poolEnabled); // now we are all set to
-			// fire queries and
-			// fetch the results
+			connection = getConnection(poolEnabled);
+			/*
+			 * now we are all set to fire queries and fetch the results
+			 */
 			pstmt = connection.prepareStatement(sql_query);
 
 			rs = pstmt.executeQuery();

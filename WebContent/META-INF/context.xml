@@ -13,7 +13,7 @@
 	  	removeAbandoned="true"
 	   	removeAbandonedTimeout="30" 
 	   	maxActive="100"
-	   	maxIdle="30" 
+	   	maxIdle="20"
 	   	maxWait="10000" 
 	   	factory="com.kennyscott.javadbconnectionpooling.MyCustomBasicDataSourceFactory"
 	   	driverClassName="com.mysql.jdbc.Driver"

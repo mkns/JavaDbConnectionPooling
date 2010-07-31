@@ -8,6 +8,7 @@ import javax.servlet.ServletContextListener;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
+import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 
 public class DBCPoolingListener implements ServletContextListener {
 
@@ -22,6 +23,11 @@ public class DBCPoolingListener implements ServletContextListener {
 
 			// Look up our data source
 			DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+			log.debug("Going to set the username, password and url");
+			BasicDataSource bds = (BasicDataSource) ds;
+			bds.setPassword("javadude");
+			bds.setUsername("javauser");
+			bds.setUrl("jdbc:mysql://localhost/javatest");
 			sce.getServletContext().setAttribute("DBCPool", ds);
 		} catch (NamingException e) {
 			e.printStackTrace();
