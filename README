@@ -34,6 +34,9 @@ http://lenny:8180/JavaDbConnectionPooling/enrollment.do?pool=yes
 
 http://lenny:8180/JavaDbConnectionPooling/enrollment.do?pool=no
 
+(Obviously, you'll want to replace the host/port with something
+that will work on your side)
+
 You should then tail -f the mysql standard log file and refresh 
 either/both of those web pages and watch the process ID that
 connects.  As you might expect, the process ID of pooled
