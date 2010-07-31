@@ -15,15 +15,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 public class CourseEnrollmentServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 6815122949882840759L;
 	private DataSource datasource = null;
 	private static int pooledCount, nonPooledCount;
+	private static Logger log = Logger.getLogger(com.onjava.dbcp.CourseEnrollmentServlet.class);
 
 	private final String sql_query = "select id, foo, bar from testdata";
 
 	public void init() throws ServletException {
+		log.debug("init() called");
 		try {
 			// Create a datasource for pooled connections.
 			datasource = (DataSource) getServletContext().getAttribute("DBCPool");
@@ -40,11 +44,11 @@ public class CourseEnrollmentServlet extends HttpServlet {
 		if (pooledConnection) {
 			pooledCount++;
 			return datasource.getConnection(); // Allocate and use a connection
-												// from the pool
+			// from the pool
 		} else {
 			nonPooledCount++;
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost/javatest", "javauser", "javadude");
-			return con; // retun a newly created object
+			return con; // return a newly created object
 		}
 	}
 
@@ -64,8 +68,8 @@ public class CourseEnrollmentServlet extends HttpServlet {
 
 		try {
 			connection = getConnection(poolEnabled); // now we are all set to
-														// fire queries and
-														// fetch the results
+			// fire queries and
+			// fetch the results
 			pstmt = connection.prepareStatement(sql_query);
 
 			rs = pstmt.executeQuery();
